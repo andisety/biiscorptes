@@ -1,5 +1,6 @@
 
 
+import 'package:biiscorptes/ui/cart_page.dart';
 import 'package:biiscorptes/ui/home.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _TemplateState extends State<Template> {
   int selectedPage = 0;
   final _pageOptions = [
      HomePage(),
-     HomePage(),
+     CartPage(),
      HomePage(),
 
   ];

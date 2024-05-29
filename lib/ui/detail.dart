@@ -39,9 +39,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Image.network(
-                    product.image,
-                    fit: BoxFit.cover,
+                  child: Center(
+                    child: Image.network(
+                      product.image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(height: 16),

@@ -1,3 +1,4 @@
+import 'package:biiscorptes/ui/cart_page.dart';
 import 'package:biiscorptes/ui/detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +27,9 @@ class MyApp extends StatelessWidget {
           name: '/product_detail',
           page: () => ProductDetailPage(
             productId: int.parse(Get.parameters['productId']!),
-          ),)
+          ),),
+            GetPage(name: '/cart', page: () => CartPage()), // Tambahkan route untuk halaman keranjang
+      
       ],
     );
   }
