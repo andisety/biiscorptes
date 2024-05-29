@@ -2,7 +2,7 @@ class Cart {
   final int id;
   final int userId;
   final String date;
-  final List<ProductCartItem> products;
+  final List<CartItem> products;
 
   Cart({
     required this.id,
@@ -12,37 +12,24 @@ class Cart {
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) {
+    List<CartItem> products = (json['products'] as List)
+        .map((item) => CartItem(productId: item['productId'], quantity: item['quantity']))
+        .toList();
+
     return Cart(
       id: json['id'],
       userId: json['userId'],
       date: json['date'],
-      products: (json['products'] as List)
-          .map((item) => ProductCartItem.fromJson(item))
-          .toList(),
+      products: products,
     );
   }
 }
-
-class ProductCartItem {
+class CartItem {
   final int productId;
   final int quantity;
-  String name;
-  String image;
 
-  ProductCartItem({
+  CartItem({
     required this.productId,
     required this.quantity,
-    this.name = '',
-    this.image = '',
   });
-
-  factory ProductCartItem.fromJson(Map<String, dynamic> json) {
-    return ProductCartItem(
-      productId: json['productId'],
-      quantity: json['quantity'],
-    );
-  }
 }
-
-
-

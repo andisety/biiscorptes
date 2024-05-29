@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/cart_controller.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CartPage extends StatelessWidget {
   final CartController cartController = Get.put(CartController());
@@ -26,26 +28,40 @@ class CartPage extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: cart.products
-                        .map((item) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                children: [
-                                  Image.network(
-                                    item.image,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(item.name),
-                                      Text('Quantity: ${item.quantity}'),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                        .map((item) => FutureBuilder(
+                              future: getProductDetails(item.productId),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else {
+                                  if (snapshot.hasError) {
+                                    return Text('Error');
+                                  } else {
+                                    var product = snapshot.data;
+                                    return Row(
+                                      children: [
+                                         SizedBox(height: 70),
+                                        Image.network(
+                                          product?['image'],
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(product?['title']),
+                                              Text('Quantity: ${item.quantity}'),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                }
+                              },
                             ))
                         .toList(),
                   ),
@@ -56,5 +72,14 @@ class CartPage extends StatelessWidget {
         }
       }),
     );
+  }
+
+  Future<Map<String, dynamic>> getProductDetails(int productId) async {
+    var response = await http.get(Uri.parse('https://fakestoreapi.com/products/$productId'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load product');
+    }
   }
 }

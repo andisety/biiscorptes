@@ -43,6 +43,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     child: Image.network(
                       product.image,
                       fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                      return Placeholder(
+                                        fallbackWidth: 50,
+                                        fallbackHeight: 50,
+                                      );
+                                    },
                     ),
                   ),
                 ),
