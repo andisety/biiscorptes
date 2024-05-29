@@ -1,5 +1,6 @@
 import 'package:biiscorptes/ui/cart_page.dart';
 import 'package:biiscorptes/ui/detail.dart';
+import 'package:biiscorptes/ui/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'template.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'UAS',
+      title: 'Biiscorp',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
           page: () => ProductDetailPage(
             productId: int.parse(Get.parameters['productId']!),
           ),),
-            GetPage(name: '/cart', page: () => CartPage()), // Tambahkan route untuk halaman keranjang
+          GetPage(name: '/cart', page: () => CartPage()), 
+          GetPage(name: '/user', page: () => UserPage()), 
       
       ],
     );

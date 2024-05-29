@@ -6,10 +6,11 @@ import 'package:http/http.dart' as http;
 
 class CartPage extends StatelessWidget {
   final CartController cartController = Get.put(CartController());
-
+double totalHarga = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Shopping Cart'),
       ),
@@ -18,9 +19,11 @@ class CartPage extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else {
           return ListView.builder(
+            
             itemCount: cartController.cartList.length,
             itemBuilder: (context, index) {
               var cart = cartController.cartList[index];
+              
               return Card(
                 margin: EdgeInsets.all(8),
                 child: ListTile(
@@ -29,6 +32,7 @@ class CartPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: cart.products
                         .map((item) => FutureBuilder(
+                          
                               future: getProductDetails(item.productId),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -38,24 +42,41 @@ class CartPage extends StatelessWidget {
                                     return Text('Error');
                                   } else {
                                     var product = snapshot.data;
-                                    return Row(
+                                     var tot = product?['price']*item.quantity;
+                                     cart.products.forEach((item) {
+                                      var product = snapshot.data;
+                                      double hargaProduk = product?['price'].toDouble() * item.quantity;
+                                      totalHarga += hargaProduk;
+                                    });
+                                    return Column(
                                       children: [
-                                         SizedBox(height: 70),
-                                        Image.network(
-                                          product?['image'],
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(product?['title']),
-                                              Text('Quantity: ${item.quantity}'),
-                                            ],
+                                            Container(
+                                            width: double.infinity,
+                                            height: 1, 
+                                            color: Colors.grey, 
+                                            margin: EdgeInsets.symmetric(vertical: 20), 
                                           ),
+                                        Row(
+                                          children: [
+                                             SizedBox(height: 50),
+                                            Image.network(
+                                              product?['image'],
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(product?['title']),
+                                                  Text('Quantity: ${item.quantity}'),
+                                                  Text('Total: \$${product?['price']} x ${item.quantity} = \$${tot}',style: TextStyle(color: Colors.green),),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     );

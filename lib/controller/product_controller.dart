@@ -7,6 +7,8 @@ class ProductController extends GetxController {
   var isLoading = true.obs;
   var productList = <Product>[].obs;
   var selectedProduct = Product().obs;
+    var filteredProducts = <Product>[].obs;
+    var searchQuery = ''.obs;
 
   @override
   void onInit() {
@@ -38,6 +40,17 @@ class ProductController extends GetxController {
       }
     } finally {
       isLoading(false);
+    }
+  }
+
+  void filterProducts(String query) {
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      filteredProducts.value = productList;
+    } else {
+      filteredProducts.value = productList
+          .where((product) => product.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
   }
 }
